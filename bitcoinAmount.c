@@ -28,7 +28,7 @@
 static const int64_t CENT = 1000000;
 static const int64_t COIN = 100000000;
 
-inline int64_t atoi64(const char* psz)
+static inline int64_t atoi64(const char* psz)
 {
 #ifdef _MSC_VER
     return _atoi64(psz);
