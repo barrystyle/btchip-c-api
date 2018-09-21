@@ -20,11 +20,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dongleComm.h"
-#include "dongleCommHid.h"
-#include "dongleCommHidHidapi.h"
-#include "dongleCommWinUSB.h"
+#ifdef HAVE_LIBUSB
+#  include "dongleCommHid.h"
+#endif
+#ifdef HAVE_HIDAPI
+#  include "dongleCommHidHidapi.h"
+#endif
+#ifdef HAVE_LIBUSB
+#  include "dongleCommWinUSB.h"
+#endif
 #ifdef DEBUG_COMM
-#include "hexUtils.h"
+#  include "hexUtils.h"
 #endif
 
 typedef enum {
