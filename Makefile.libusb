@@ -1,4 +1,4 @@
-LIBUSB = libusb
+LIBUSB ?= libusb
 CC     ?= gcc
 CFLAGS = -Wall -Werror -Os -DHAVE_LIBUSB -DEXTRA_DEBUG -DDEBUG_COMM -I. -I/usr/local/include -I$(LIBUSB)/include
 LIBS = -L/usr/local/lib -L$(LIBUSB)/mingw32/dll

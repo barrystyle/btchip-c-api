@@ -1,7 +1,8 @@
-HIDAPI = hidapi-hidraw
+HIDAPI ?= /usr
+HIDAPI_LIBNAME ?= hidapi-hidraw
 CC     ?= gcc
-CFLAGS = -Wall -Werror -Os -DHAVE_HIDAPI -DEXTRA_DEBUG -DDEBUG_COMM -I. -I/usr/local/include 
-LIBS = -L/usr/local/lib 
+CFLAGS = -Wall -Werror -Os -DHAVE_HIDAPI -DEXTRA_DEBUG -DDEBUG_COMM -I. -isystem /usr/local/include -isystem $(HIDAPI)/include
+LIBS = -L/usr/local/lib -L $(HIDAPI)/lib
 OBJS   = hexUtils.o btchipUtils.o bitcoinVarint.o bitcoinTransaction.o bitcoinAmount.o btchipArgs.o
 OBJS_COMM = $(OBJS) dongleCommHidHidapi.o dongleComm.o ledgerLayer.o
 
@@ -23,91 +24,91 @@ all: btchip_setup btchip_setup_forward btchip_setup_kiosk btchip_setup_143 btchi
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 btchip_setup: commands/btchip_setup.o $(OBJS_COMM)
-	$(CC) commands/btchip_setup.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup -l $(HIDAPI) 
+	$(CC) commands/btchip_setup.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup -l $(HIDAPI_LIBNAME)
 
 btchip_setup_forward: commands/btchip_setup_forward.o $(OBJS_COMM)
-	$(CC) commands/btchip_setup_forward.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup_forward -l $(HIDAPI) 
+	$(CC) commands/btchip_setup_forward.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup_forward -l $(HIDAPI_LIBNAME)
 
 btchip_setup_kiosk: commands/btchip_setup_kiosk.o $(OBJS_COMM)
-	$(CC) commands/btchip_setup_kiosk.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup_kiosk -l $(HIDAPI) 
+	$(CC) commands/btchip_setup_kiosk.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup_kiosk -l $(HIDAPI_LIBNAME)
 
 btchip_setup_143: commands/btchip_setup_143.o $(OBJS_COMM)
-	$(CC) commands/btchip_setup_143.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup_143 -l $(HIDAPI) 
+	$(CC) commands/btchip_setup_143.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setup_143 -l $(HIDAPI_LIBNAME)
 
 btchip_verifyPin: commands/btchip_verifyPin.o $(OBJS_COMM)
-	$(CC) commands/btchip_verifyPin.o $(LIBS) $(OBJS_COMM) -o bin/btchip_verifyPin -l $(HIDAPI) 
+	$(CC) commands/btchip_verifyPin.o $(LIBS) $(OBJS_COMM) -o bin/btchip_verifyPin -l $(HIDAPI_LIBNAME)
 
 btchip_getOperationMode: commands/btchip_getOperationMode.o $(OBJS_COMM)
-	$(CC) commands/btchip_getOperationMode.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getOperationMode -l $(HIDAPI) 
+	$(CC) commands/btchip_getOperationMode.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getOperationMode -l $(HIDAPI_LIBNAME)
 
 btchip_setOperationMode: commands/btchip_setOperationMode.o $(OBJS_COMM)
-	$(CC) commands/btchip_setOperationMode.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setOperationMode -l $(HIDAPI) 
+	$(CC) commands/btchip_setOperationMode.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setOperationMode -l $(HIDAPI_LIBNAME)
 
 btchip_setAlt2FA: commands/btchip_setAlt2FA.o $(OBJS_COMM)
-	$(CC) commands/btchip_setAlt2FA.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setAlt2FA -l $(HIDAPI)
+	$(CC) commands/btchip_setAlt2FA.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setAlt2FA $(HIDAPI)
 
 btchip_getWalletPublicKey: commands/btchip_getWalletPublicKey.o $(OBJS_COMM)
-	$(CC) commands/btchip_getWalletPublicKey.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getWalletPublicKey -l $(HIDAPI) 
+	$(CC) commands/btchip_getWalletPublicKey.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getWalletPublicKey -l $(HIDAPI_LIBNAME)
 
 btchip_getTrustedInput: commands/btchip_getTrustedInput.o  btchipTrustedInput.o $(OBJS_COMM)
-	$(CC) commands/btchip_getTrustedInput.o btchipTrustedInput.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getTrustedInput -l $(HIDAPI) 
+	$(CC) commands/btchip_getTrustedInput.o btchipTrustedInput.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getTrustedInput -l $(HIDAPI_LIBNAME)
 
 btchip_startUntrustedTransaction: commands/btchip_startUntrustedTransaction.o  btchipTrustedInput.o $(OBJS_COMM)
-	$(CC) commands/btchip_startUntrustedTransaction.o btchipTrustedInput.o $(LIBS) $(OBJS_COMM) -o bin/btchip_startUntrustedTransaction -l $(HIDAPI) 
+	$(CC) commands/btchip_startUntrustedTransaction.o btchipTrustedInput.o $(LIBS) $(OBJS_COMM) -o bin/btchip_startUntrustedTransaction -l $(HIDAPI_LIBNAME)
 
 btchip_finalizeInput: commands/btchip_finalizeInput.o $(OBJS_COMM)
-	$(CC) commands/btchip_finalizeInput.o $(LIBS) $(OBJS_COMM) -o bin/btchip_finalizeInput -l $(HIDAPI) 
+	$(CC) commands/btchip_finalizeInput.o $(LIBS) $(OBJS_COMM) -o bin/btchip_finalizeInput -l $(HIDAPI_LIBNAME)
 
 btchip_finalizeInputFull: commands/btchip_finalizeInputFull.o $(OBJS_COMM)
-	$(CC) commands/btchip_finalizeInputFull.o $(LIBS) $(OBJS_COMM) -o bin/btchip_finalizeInputFull -l $(HIDAPI) 
+	$(CC) commands/btchip_finalizeInputFull.o $(LIBS) $(OBJS_COMM) -o bin/btchip_finalizeInputFull -l $(HIDAPI_LIBNAME)
 
 btchip_untrustedHashSign: commands/btchip_untrustedHashSign.o $(OBJS_COMM)
-	$(CC) commands/btchip_untrustedHashSign.o $(LIBS) $(OBJS_COMM) -o bin/btchip_untrustedHashSign -l $(HIDAPI) 
+	$(CC) commands/btchip_untrustedHashSign.o $(LIBS) $(OBJS_COMM) -o bin/btchip_untrustedHashSign -l $(HIDAPI_LIBNAME)
 
 btchip_signMessagePrepare: commands/btchip_signMessagePrepare.o $(OBJS_COMM)
-	$(CC) commands/btchip_signMessagePrepare.o $(LIBS) $(OBJS_COMM) -o bin/btchip_signMessagePrepare -l $(HIDAPI) 
+	$(CC) commands/btchip_signMessagePrepare.o $(LIBS) $(OBJS_COMM) -o bin/btchip_signMessagePrepare -l $(HIDAPI_LIBNAME)
 
 btchip_signMessageSign: commands/btchip_signMessageSign.o $(OBJS_COMM)
-	$(CC) commands/btchip_signMessageSign.o $(LIBS) $(OBJS_COMM) -o bin/btchip_signMessageSign -l $(HIDAPI) 
+	$(CC) commands/btchip_signMessageSign.o $(LIBS) $(OBJS_COMM) -o bin/btchip_signMessageSign -l $(HIDAPI_LIBNAME)
 
 btchip_composeMofNStart: commands/btchip_composeMofNStart.o $(OBJS_COMM)
-	$(CC) commands/btchip_composeMofNStart.o $(LIBS) $(OBJS_COMM) -o bin/btchip_composeMofNStart -l $(HIDAPI) 
+	$(CC) commands/btchip_composeMofNStart.o $(LIBS) $(OBJS_COMM) -o bin/btchip_composeMofNStart -l $(HIDAPI_LIBNAME)
 
 btchip_composeMofNContinue: commands/btchip_composeMofNContinue.o $(OBJS_COMM)
-	$(CC) commands/btchip_composeMofNContinue.o $(LIBS) $(OBJS_COMM) -o bin/btchip_composeMofNContinue -l $(HIDAPI) 
+	$(CC) commands/btchip_composeMofNContinue.o $(LIBS) $(OBJS_COMM) -o bin/btchip_composeMofNContinue -l $(HIDAPI_LIBNAME)
 
 btchip_importPrivateKey: commands/btchip_importPrivateKey.o $(OBJS_COMM)
-	$(CC) commands/btchip_importPrivateKey.o $(LIBS) $(OBJS_COMM) -o bin/btchip_importPrivateKey -l $(HIDAPI) 
+	$(CC) commands/btchip_importPrivateKey.o $(LIBS) $(OBJS_COMM) -o bin/btchip_importPrivateKey -l $(HIDAPI_LIBNAME)
 
 btchip_getPublicKey: commands/btchip_getPublicKey.o $(OBJS_COMM)
-	$(CC) commands/btchip_getPublicKey.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getPublicKey -l $(HIDAPI) 
+	$(CC) commands/btchip_getPublicKey.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getPublicKey -l $(HIDAPI_LIBNAME)
 
 btchip_deriveBip32Key: commands/btchip_deriveBip32Key.o $(OBJS_COMM)
-	$(CC) commands/btchip_deriveBip32Key.o $(LIBS) $(OBJS_COMM) -o bin/btchip_deriveBip32Key -l $(HIDAPI) 
+	$(CC) commands/btchip_deriveBip32Key.o $(LIBS) $(OBJS_COMM) -o bin/btchip_deriveBip32Key -l $(HIDAPI_LIBNAME)
 
 btchip_signImmediate: commands/btchip_signImmediate.o $(OBJS_COMM)
-	$(CC) commands/btchip_signImmediate.o $(LIBS) $(OBJS_COMM) -o bin/btchip_signImmediate -l $(HIDAPI) 
+	$(CC) commands/btchip_signImmediate.o $(LIBS) $(OBJS_COMM) -o bin/btchip_signImmediate -l $(HIDAPI_LIBNAME)
 
 btchip_verifyImmediate: commands/btchip_verifyImmediate.o $(OBJS_COMM)
-	$(CC) commands/btchip_verifyImmediate.o $(LIBS) $(OBJS_COMM) -o bin/btchip_verifyImmediate -l $(HIDAPI) 
+	$(CC) commands/btchip_verifyImmediate.o $(LIBS) $(OBJS_COMM) -o bin/btchip_verifyImmediate -l $(HIDAPI_LIBNAME)
 
 btchip_getRandom: commands/btchip_getRandom.o $(OBJS_COMM)
-	$(CC) commands/btchip_getRandom.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getRandom -l $(HIDAPI) 
+	$(CC) commands/btchip_getRandom.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getRandom -l $(HIDAPI_LIBNAME)
 
 btchip_getFirmwareVersion: commands/btchip_getFirmwareVersion.o $(OBJS_COMM)
-	$(CC) commands/btchip_getFirmwareVersion.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getFirmwareVersion -l $(HIDAPI) 
+	$(CC) commands/btchip_getFirmwareVersion.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getFirmwareVersion -l $(HIDAPI_LIBNAME)
 
 btchip_getPosSeed: commands/btchip_getPosSeed.o $(OBJS_COMM)
-	$(CC) commands/btchip_getPosSeed.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getPosSeed -l $(HIDAPI) 
+	$(CC) commands/btchip_getPosSeed.o $(LIBS) $(OBJS_COMM) -o bin/btchip_getPosSeed -l $(HIDAPI_LIBNAME)
 
 btchip_setTransportWinUSB: commands/btchip_setTransportWinUSB.o $(OBJS_COMM)
-	$(CC) commands/btchip_setTransportWinUSB.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setTransportWinUSB -l $(HIDAPI) 
+	$(CC) commands/btchip_setTransportWinUSB.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setTransportWinUSB -l $(HIDAPI_LIBNAME)
 
 btchip_setTransportHID: commands/btchip_setTransportHID.o $(OBJS_COMM)
-	$(CC) commands/btchip_setTransportHID.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setTransportHID -l $(HIDAPI) 
+	$(CC) commands/btchip_setTransportHID.o $(LIBS) $(OBJS_COMM) -o bin/btchip_setTransportHID -l $(HIDAPI_LIBNAME)
 
 btchip_util_runScript: utils/btchip_util_runScript.o $(OBJS_COMM)
-	$(CC) utils/btchip_util_runScript.o $(LIBS) $(OBJS_COMM) -o bin/btchip_util_runScript -l $(HIDAPI) 
+	$(CC) utils/btchip_util_runScript.o $(LIBS) $(OBJS_COMM) -o bin/btchip_util_runScript -l $(HIDAPI_LIBNAME)
 
 btchip_util_parseRawTransaction: utils/btchip_util_parseRawTransaction.o 
 	$(CC) utils/btchip_util_parseRawTransaction.o $(LIBS) $(OBJS) -o bin/btchip_util_parseRawTransaction
@@ -131,7 +132,7 @@ btchip_util_formatOutput: utils/btchip_util_formatOutput.o
 	$(CC) utils/btchip_util_formatOutput.o $(LIBS) $(OBJS) -o bin/btchip_util_formatOutput
 
 signTransaction: samples/signTransaction.o btchipTrustedInput.o $(OBJS_COMM) 
-	$(CC) samples/signTransaction.o btchipTrustedInput.o $(LIBS) $(OBJS_COMM) -lconfig -l $(HIDAPI) -o bin/signTransaction 
+	$(CC) samples/signTransaction.o btchipTrustedInput.o $(LIBS) $(OBJS_COMM) -lconfig $(HIDAPI) -o bin/signTransaction
 
 clean:
 	rm -rf *.o bin commands/*.o utils/*.o
